@@ -1,6 +1,8 @@
+import 'package:atmosfer/models/job_detail_model.dart';
 import 'package:atmosfer/models/job_model.dart';
 import 'package:atmosfer/pages/home_page/home_page_controller.dart';
 import 'package:atmosfer/pages/job_detail_page/job_detail_page.dart';
+import 'package:atmosfer/pages/job_detail_page/job_detail_page_controller.dart';
 import 'package:atmosfer/widgets/header/header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -208,10 +210,18 @@ class _Item extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.to(
-          JobDetailPage(
+        Get.put(
+          JobDetailPageController(
             job: job,
+            jobDetailModel: JobDetailModel(
+              content: "<html><p>test</p></html>",
+              id: job.id,
+              image: "https://picsum.photos/500/500",
+            ),
           ),
+        );
+        Get.to(
+          const JobDetailPage(),
         );
       },
       child: Container(
@@ -225,7 +235,7 @@ class _Item extends StatelessWidget {
             8,
           ),
           border: Border.all(
-            width: 1,
+            width: 2,
             color: Colors.grey[350] ?? Colors.grey,
           ),
           boxShadow: const [
