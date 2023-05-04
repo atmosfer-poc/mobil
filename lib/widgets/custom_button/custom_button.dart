@@ -23,6 +23,7 @@ class CustomButton extends StatefulWidget {
   final double minFontSize;
   final Function(Function startLoading, Function stopLoading)? onPressed;
   final Widget loadingItem;
+  final bool enabled;
 
   const CustomButton({
     Key? key,
@@ -34,6 +35,7 @@ class CustomButton extends StatefulWidget {
     ),
     this.borderColor,
     this.overlayColor,
+    this.enabled = true,
     this.elevation = 0,
     this.borderHeight = 1.5,
     this.borderRadius = 4,
@@ -79,7 +81,7 @@ class CustomButtonState extends State<CustomButton> {
       height: widget.height,
       width: widget.width,
       child: ElevatedButton(
-        onPressed: widget.onPressed != null
+        onPressed: widget.enabled && widget.onPressed != null
             ? () {
                 if (widget.onPressed == null) return;
                 if (state != CustomButtonStates.idle) return;

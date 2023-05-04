@@ -1,6 +1,11 @@
+import 'dart:convert';
+
+import 'package:atmosfer/core/atmosfer_navigator.dart';
+import 'package:atmosfer/core/core.dart';
 import 'package:atmosfer/core/custom_animations.dart';
-import 'package:atmosfer/pages/login_page/login_page.dart';
+import 'package:atmosfer/models/city.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class SplashPage extends StatefulWidget {
@@ -18,7 +23,7 @@ class _SplashPageState extends State<SplashPage> {
         _splashEvents().then(
           (value) {
             if (value != null) {
-              Get.offAll(
+              AtmosferNavigator.pushAndRemoveUntil(
                 value,
               );
             }
@@ -29,13 +34,21 @@ class _SplashPageState extends State<SplashPage> {
     super.initState();
   }
 
-  Future<Widget?> _splashEvents() async {
-    await Future.delayed(
-      const Duration(
-        seconds: 2,
-      ),
-    );
-    return const LoginPage();
+  Future<String?> _splashEvents() async {
+    final key = await rootBundle.loadString('assets/data/cities.json');
+    Map<String, String> cityMap = Map<String, String>.from(jsonDecode(key));
+    AtmosferCore.cities.clear();
+    for (var element in cityMap.keys) {
+      var value = cityMap[element]!;
+      AtmosferCore.cities.add(
+        City(
+          id: element,
+          name: value,
+        ),
+      );
+    }
+
+    return "/login";
   }
 
   @override

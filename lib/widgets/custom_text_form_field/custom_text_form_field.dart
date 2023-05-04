@@ -4,11 +4,15 @@ class CustomTextFormField extends StatefulWidget {
   final String label;
   final TextEditingController? textEditingController;
   final bool required;
+  final String? hint;
+  final Function()? onComplete;
   const CustomTextFormField({
     super.key,
     required this.label,
     required this.required,
     this.textEditingController,
+    this.onComplete,
+    this.hint,
   });
 
   @override
@@ -16,6 +20,9 @@ class CustomTextFormField extends StatefulWidget {
 }
 
 class _CustomTextFormFieldState extends State<CustomTextFormField> {
+  final TextEditingController textEditingController = TextEditingController();
+  TextEditingController get getTextEditingController => widget.textEditingController ?? textEditingController;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -47,11 +54,29 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
             ),
           ),
           child: TextFormField(
-            controller: widget.textEditingController,
+            controller: getTextEditingController,
+            onChanged: (value) async {
+              String oldValue = value;
+              await Future.delayed(
+                const Duration(
+                  milliseconds: 1000,
+                ),
+              );
+              String newValue = getTextEditingController.text;
+
+              if (oldValue == newValue) {
+                widget.onComplete?.call();
+              }
+            },
             cursorColor: Colors.black,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               floatingLabelBehavior: FloatingLabelBehavior.never,
               isDense: true,
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 10,
+              ),
+              hintText: widget.hint,
               border: InputBorder.none,
               errorBorder: InputBorder.none,
               enabledBorder: InputBorder.none,

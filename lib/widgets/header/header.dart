@@ -6,10 +6,12 @@ import 'package:get/get.dart';
 class Header extends StatelessWidget {
   final String header;
   final bool backHeader;
+  final Function()? customBackFunction;
   const Header({
     super.key,
     required this.header,
     this.backHeader = false,
+    this.customBackFunction,
   });
 
   @override
@@ -31,9 +33,10 @@ class Header extends StatelessWidget {
             children: [
               if (Navigator.of(context).canPop() && backHeader)
                 IconButton(
-                  onPressed: () {
-                    Get.back();
-                  },
+                  onPressed: customBackFunction ??
+                      () {
+                        Get.back();
+                      },
                   icon: const Icon(
                     CupertinoIcons.chevron_back,
                     color: Colors.white,

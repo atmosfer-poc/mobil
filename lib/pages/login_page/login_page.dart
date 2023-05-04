@@ -1,7 +1,5 @@
-import 'package:atmosfer/pages/forgot_password_page/forgot_password_page.dart';
-import 'package:atmosfer/pages/home_page/home_page.dart';
+import 'package:atmosfer/core/atmosfer_navigator.dart';
 import 'package:atmosfer/pages/login_page/login_page_controller.dart';
-import 'package:atmosfer/pages/register_page/register_page.dart';
 import 'package:atmosfer/widgets/custom_button/custom_button.dart';
 import 'package:atmosfer/widgets/custom_text_form_field/custom_text_form_field.dart';
 import 'package:atmosfer/widgets/header/header.dart';
@@ -105,8 +103,8 @@ class _Body extends StatelessWidget {
                       Expanded(
                         child: GestureDetector(
                           onTap: () {
-                            Get.to(
-                              const ForgotPasswordPage(),
+                            AtmosferNavigator.push(
+                              "/forgotpw",
                             );
                           },
                           child: const Text(
@@ -140,8 +138,8 @@ class _Body extends StatelessWidget {
                         ),
                       );
                       stopLoading();
-                      Get.offAll(
-                        const HomePage(),
+                      AtmosferNavigator.pushAndRemoveUntil(
+                        "/home",
                       );
                     },
                     textStyle: const TextStyle(
@@ -198,8 +196,8 @@ class _Body extends StatelessWidget {
                         ),
                       );
                       stopLoading();
-                      Get.to(
-                        const RegisterPage(),
+                      AtmosferNavigator.push(
+                        "/register",
                       );
                     },
                     textStyle: const TextStyle(

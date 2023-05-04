@@ -1,7 +1,7 @@
+import 'package:atmosfer/core/atmosfer_navigator.dart';
 import 'package:atmosfer/models/job_detail_model.dart';
 import 'package:atmosfer/models/job_model.dart';
 import 'package:atmosfer/pages/home_page/home_page_controller.dart';
-import 'package:atmosfer/pages/job_detail_page/job_detail_page.dart';
 import 'package:atmosfer/pages/job_detail_page/job_detail_page_controller.dart';
 import 'package:atmosfer/widgets/header/header.dart';
 import 'package:flutter/material.dart';
@@ -220,8 +220,8 @@ class _Item extends StatelessWidget {
             ),
           ),
         );
-        Get.to(
-          const JobDetailPage(),
+        AtmosferNavigator.push(
+          "/detail",
         );
       },
       child: Container(

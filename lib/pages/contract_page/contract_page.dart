@@ -1,30 +1,20 @@
-import 'package:atmosfer/core/atmosfer_navigator.dart';
-import 'package:atmosfer/pages/job_apply_page/job_apply_page_controller.dart';
-import 'package:atmosfer/pages/job_detail_page/job_detail_page_controller.dart';
+import 'package:atmosfer/pages/contract_page/contract_page_controller.dart';
 import 'package:atmosfer/widgets/custom_button/custom_button.dart';
 import 'package:atmosfer/widgets/header/header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
 
-class JobDetailPage extends StatefulWidget {
-  const JobDetailPage({
+class ContractPage extends StatelessWidget {
+  const ContractPage({
     super.key,
   });
 
   @override
-  State<JobDetailPage> createState() => _JobDetailPageState();
-}
-
-class _JobDetailPageState extends State<JobDetailPage> {
-  @override
-  void dispose() {
-    Get.delete<JobDetailPageController>();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    Get.put(
+      ContractPageController(),
+    );
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Container(
@@ -44,6 +34,8 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<ContractPageController>();
+
     return Column(
       children: [
         const Header(
@@ -75,7 +67,7 @@ class _Body extends StatelessWidget {
                       ),
                       Expanded(
                         child: Text(
-                          "İş Tanımı",
+                          "Aydınlatma Metni",
                           style: TextStyle(
                             fontWeight: FontWeight.w800,
                             fontSize: 24,
@@ -119,42 +111,37 @@ class _Body extends StatelessWidget {
                         ),
                       ],
                     ),
-                    child: RawScrollbar(
-                      trackVisibility: true,
-                      thickness: 6,
-                      thumbColor: Colors.black,
-                      radius: const Radius.circular(
-                        16,
-                      ),
-                      padding: EdgeInsets.zero,
-                      child: SingleChildScrollView(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 24,
-                          ),
-                          child: Column(
-                            children: [
-                              GetBuilder<JobDetailPageController>(
-                                builder: (_) {
-                                  return Image(
-                                    image: NetworkImage(
-                                      _.jobDetailModel.image,
-                                    ),
-                                  );
-                                },
-                              ),
-                              const SizedBox(
-                                height: 16,
-                              ),
-                              GetBuilder<JobDetailPageController>(
-                                builder: (_) {
-                                  return Html(
-                                    data: _.jobDetailModel.content,
-                                  );
-                                },
-                              ),
-                            ],
+                    child: NotificationListener<ScrollNotification>(
+                      onNotification: (notification) {
+                        if (notification is ScrollUpdateNotification) {
+                          final metrics = notification.metrics;
+                          if (metrics.atEdge) {
+                            bool isTop = metrics.pixels == 0;
+                            if (!isTop) {
+                              controller.scrollDownChange();
+                            }
+                          }
+                        }
+                        return false;
+                      },
+                      child: RawScrollbar(
+                        trackVisibility: true,
+                        thickness: 6,
+                        thumbColor: Colors.black,
+                        radius: const Radius.circular(
+                          16,
+                        ),
+                        padding: EdgeInsets.zero,
+                        child: SingleChildScrollView(
+                          controller: controller.scrollController,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 24,
+                            ),
+                            child: Html(
+                              data: "",
+                            ),
                           ),
                         ),
                       ),
@@ -169,24 +156,26 @@ class _Body extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16,
                 ),
-                child: CustomButton(
-                  text: "Başvur",
-                  height: 60,
-                  onPressed: (startLoading, stopLoading) {
-                    Get.put(
-                      JobApplyPageController(),
-                    );
-                    AtmosferNavigator.push(
-                      "/apply",
+                child: GetBuilder<ContractPageController>(
+                  builder: (_) {
+                    return CustomButton(
+                      text: "Onayla",
+                      height: 60,
+                      enabled: _.isFirstScrollDown,
+                      onPressed: (startLoading, stopLoading) {
+                        Get.back(
+                          result: true,
+                        );
+                      },
+                      maxFontSize: 24,
+                      backgroundColor: _.isFirstScrollDown ? Colors.black : Colors.grey,
+                      textStyle: const TextStyle(
+                        fontSize: 24,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                     );
                   },
-                  maxFontSize: 24,
-                  backgroundColor: Colors.black,
-                  textStyle: const TextStyle(
-                    fontSize: 24,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
                 ),
               ),
               const SizedBox(
