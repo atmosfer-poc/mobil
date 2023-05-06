@@ -1,14 +1,26 @@
 import 'package:atmosfer/pages/contract_page/contract_page_controller.dart';
 import 'package:atmosfer/widgets/custom_button/custom_button.dart';
 import 'package:atmosfer/widgets/header/header.dart';
+import 'package:atmosfer/widgets/loading_widget/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
 
-class ContractPage extends StatelessWidget {
+class ContractPage extends StatefulWidget {
   const ContractPage({
     super.key,
   });
+
+  @override
+  State<ContractPage> createState() => _ContractPageState();
+}
+
+class _ContractPageState extends State<ContractPage> {
+  @override
+  void dispose() {
+    Get.delete<ContractPageController>();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -139,8 +151,30 @@ class _Body extends StatelessWidget {
                               horizontal: 16,
                               vertical: 24,
                             ),
-                            child: Html(
-                              data: "",
+                            child: GetBuilder<ContractPageController>(
+                              builder: (_) {
+                                if (_.loading) {
+                                  return const LoadingWidget(
+                                    black: true,
+                                    size: 50,
+                                  );
+                                }
+
+                                if (_.contract == null) {
+                                  return const Text(
+                                    "Sistemsel bir hatadan dolayı metin yüklenemedi. Lütfen tekrar deneyiniz.",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  );
+                                }
+
+                                return Html(
+                                  data: _.contract!,
+                                );
+                              },
                             ),
                           ),
                         ),

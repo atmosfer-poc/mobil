@@ -1,7 +1,9 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:atmosfer/core/api/api_constants.dart';
 import 'package:atmosfer/models/city.dart';
+import 'package:atmosfer/pages/job_detail_page/job_detail_page_controller.dart';
 import 'package:atmosfer/widgets/custom_toast/custom_toast.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/widgets.dart';
@@ -37,6 +39,7 @@ class JobApplyPageController extends GetxController {
   void pickFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       allowMultiple: false,
+      type: FileType.custom,
       allowedExtensions: [
         "pdf",
         "doc",
@@ -111,6 +114,8 @@ class JobApplyPageController extends GetxController {
       return false;
     }
 
+    File file = File(selectedFile!.path!);
+
     var formData = dio.FormData.fromMap(
       {
         'tckn': identity,
@@ -120,17 +125,23 @@ class JobApplyPageController extends GetxController {
         'phoneNumber': phone,
         'workType': workingStyle,
         'cv': await dio.MultipartFile.fromFile(
-          selectedFile!.path!,
+          file.path,
           filename: "${name}_$surname.${selectedFile!.name.split(".").last}",
         ),
       },
     );
+    final JobDetailPageController jobDetailPageController = Get.find<JobDetailPageController>();
+    String path = APIConstants.getJobApplyUrl.replaceAll(
+      "<id>",
+      jobDetailPageController.job.id.toString(),
+    );
 
     var response = await APIConstants.sendPost(
-      APIConstants.getJobApplyUrl,
+      path,
       data: formData,
     );
 
+    log(response.statusCode.toString());
     log(response.data.toString());
     bool status = response.statusCode == 200;
     if (!status) {
