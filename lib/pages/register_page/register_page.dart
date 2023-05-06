@@ -1,4 +1,4 @@
-import 'package:atmosfer/pages/login_page/login_page_controller.dart';
+import 'package:atmosfer/pages/register_page/register_page_controller.dart';
 import 'package:atmosfer/widgets/custom_button/custom_button.dart';
 import 'package:atmosfer/widgets/custom_text_form_field/custom_text_form_field.dart';
 import 'package:atmosfer/widgets/header/header.dart';
@@ -15,13 +15,13 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   @override
   void dispose() {
-    Get.delete<LoginPageController>();
+    Get.delete<RegisterPageController>();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    Get.put(LoginPageController());
+    Get.put(RegisterPageController());
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -70,25 +70,36 @@ class _Body extends StatelessWidget {
                 const SizedBox(
                   height: 16,
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(
+                Padding(
+                  padding: const EdgeInsets.symmetric(
                     horizontal: 16,
                   ),
-                  child: CustomTextFormField(
-                    label: "Kullanıcı Adı",
-                    required: true,
+                  child: GetBuilder<RegisterPageController>(
+                    builder: (_) {
+                      return CustomTextFormField(
+                        label: "Kullanıcı Adı",
+                        required: true,
+                        textEditingController: _.emailController,
+                      );
+                    },
                   ),
                 ),
                 const SizedBox(
                   height: 16,
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(
+                Padding(
+                  padding: const EdgeInsets.symmetric(
                     horizontal: 16,
                   ),
-                  child: CustomTextFormField(
-                    label: "Şifre",
-                    required: true,
+                  child: GetBuilder<RegisterPageController>(
+                    builder: (_) {
+                      return CustomTextFormField(
+                        label: "Şifre",
+                        required: true,
+                        password: true,
+                        textEditingController: _.passwordController,
+                      );
+                    },
                   ),
                 ),
                 const SizedBox(
@@ -101,12 +112,9 @@ class _Body extends StatelessWidget {
                   child: CustomButton(
                     text: "Kayıt Ol",
                     onPressed: (startLoading, stopLoading) async {
+                      final controller = Get.find<RegisterPageController>();
                       startLoading();
-                      await Future.delayed(
-                        const Duration(
-                          seconds: 1,
-                        ),
-                      );
+                      await controller.register();
                       stopLoading();
                     },
                     textStyle: const TextStyle(

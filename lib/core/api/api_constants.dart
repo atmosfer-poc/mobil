@@ -37,6 +37,7 @@ class APIConstants {
       data: data,
       options: dio.Options(
         headers: headers,
+        validateStatus: (status) => true,
       ),
       queryParameters: queryParameters,
     );
@@ -70,6 +71,7 @@ class APIConstants {
       data: data,
       options: dio.Options(
         headers: headers,
+        validateStatus: (status) => true,
       ),
       queryParameters: queryParameters,
     );
@@ -101,6 +103,7 @@ class APIConstants {
       path,
       options: dio.Options(
         headers: headers,
+        validateStatus: (status) => true,
       ),
       queryParameters: queryParameters,
     );

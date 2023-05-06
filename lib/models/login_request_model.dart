@@ -1,21 +1,22 @@
+
 import 'dart:convert';
 
-class LoginRegisterRequestModel {
+class LoginRequestModel {
   String username;
   String password;
   String? otp;
-  LoginRegisterRequestModel({
+  LoginRequestModel({
     required this.username,
     required this.password,
     this.otp,
   });
 
-  LoginRegisterRequestModel copyWith({
+  LoginRequestModel copyWith({
     String? username,
     String? password,
     String? otp,
   }) {
-    return LoginRegisterRequestModel(
+    return LoginRequestModel(
       username: username ?? this.username,
       password: password ?? this.password,
       otp: otp ?? this.otp,
@@ -34,8 +35,8 @@ class LoginRegisterRequestModel {
     return result;
   }
 
-  factory LoginRegisterRequestModel.fromMap(Map<String, dynamic> map) {
-    return LoginRegisterRequestModel(
+  factory LoginRequestModel.fromMap(Map<String, dynamic> map) {
+    return LoginRequestModel(
       username: map['username'] ?? '',
       password: map['password'] ?? '',
       otp: map['otp'],
@@ -44,7 +45,7 @@ class LoginRegisterRequestModel {
 
   String toJson() => json.encode(toMap());
 
-  factory LoginRegisterRequestModel.fromJson(String source) => LoginRegisterRequestModel.fromMap(json.decode(source));
+  factory LoginRequestModel.fromJson(String source) => LoginRequestModel.fromMap(json.decode(source));
 
   @override
   String toString() => 'LoginRegisterRequestModel(username: $username, password: $password, otp: $otp)';
@@ -53,7 +54,7 @@ class LoginRegisterRequestModel {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is LoginRegisterRequestModel && other.username == username && other.password == password && other.otp == otp;
+    return other is LoginRequestModel && other.username == username && other.password == password && other.otp == otp;
   }
 
   @override

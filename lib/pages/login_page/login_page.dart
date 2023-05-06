@@ -194,13 +194,6 @@ class _Body extends StatelessWidget {
                   child: CustomButton(
                     text: "Kayıt Ol",
                     onPressed: (startLoading, stopLoading) async {
-                      startLoading();
-                      await Future.delayed(
-                        const Duration(
-                          seconds: 1,
-                        ),
-                      );
-                      stopLoading();
                       AtmosferNavigator.push(
                         "/register",
                       );

@@ -1,12 +1,12 @@
 import 'package:atmosfer/core/api/api_constants.dart';
 import 'package:atmosfer/core/atmosfer_navigator.dart';
 import 'package:atmosfer/core/system/system_controller.dart';
-import 'package:atmosfer/models/login_register_request_model.dart';
 import 'package:atmosfer/models/login_response_model.dart';
 import 'package:atmosfer/widgets/custom_toast/custom_toast.dart';
 import 'package:atmosfer/widgets/otp_modal/otp_modal.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:atmosfer/models/login_request_model.dart';
 
 class LoginPageController extends GetxController {
   final SystemController systemController = Get.find<SystemController>();
@@ -31,7 +31,7 @@ class LoginPageController extends GetxController {
       return;
     }
 
-    LoginRegisterRequestModel loginRegisterRequestModel = LoginRegisterRequestModel(
+    LoginRequestModel loginRegisterRequestModel = LoginRequestModel(
       username: username,
       password: password,
     );

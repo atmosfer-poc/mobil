@@ -1,20 +1,21 @@
 import 'package:atmosfer/core/api/api_constants.dart';
 import 'package:atmosfer/core/atmosfer_navigator.dart';
-import 'package:atmosfer/models/login_register_request_model.dart';
+import 'package:atmosfer/models/register_request_model.dart';
 import 'package:atmosfer/widgets/custom_toast/custom_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class RegisterPageController extends GetxController {
-  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  Future<void> login() async {
-    String username = usernameController.text;
+  Future<void> register() async {
+    String email = emailController.text;
     String password = passwordController.text;
-    if (username.isEmpty) {
+
+    if (email.isEmpty) {
       CustomToast(
-        text: "Kullanıcı adınızı doldurmadan kayıt olamazsınız.",
+        text: "E-Mailinizi doldurmadan kayıt olamazsınız.",
         toastType: CustomToastType.warning,
       ).showToast();
       return;
@@ -27,14 +28,14 @@ class RegisterPageController extends GetxController {
       return;
     }
 
-    LoginRegisterRequestModel loginRegisterRequestModel = LoginRegisterRequestModel(
-      username: username,
+    RegisterRequestModel registerRequestModel = RegisterRequestModel(
+      email: email,
       password: password,
     );
 
     var response = await APIConstants.sendPost(
       APIConstants.getRegisterUrl,
-      data: loginRegisterRequestModel.toMap(),
+      data: registerRequestModel.toMap(),
     );
 
     var data = response.data;
@@ -56,9 +57,9 @@ class RegisterPageController extends GetxController {
       return;
     }
 
-    String? email = data["email"];
+    String? returnEmail = data["email"];
     String? role = data["role"];
-    if (email != null && role != null) {
+    if (returnEmail != null && role != null) {
       CustomToast(
         text: "Kayıt işleminiz başarılı bir şekilde gerçekleştirildi. Mail adresinize gelen doğrulama linki ile hesabınızı doğruladıktan sonra giriş yapabilirsiniz.",
         toastType: CustomToastType.success,
