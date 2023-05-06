@@ -1,7 +1,12 @@
+import 'dart:developer';
+
+import 'package:atmosfer/core/api/api_constants.dart';
 import 'package:atmosfer/models/city.dart';
+import 'package:atmosfer/widgets/custom_toast/custom_toast.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:dio/dio.dart' as dio;
 
 class JobApplyPageController extends GetxController {
   TextEditingController identityController = TextEditingController();
@@ -13,16 +18,6 @@ class JobApplyPageController extends GetxController {
   PlatformFile? selectedFile;
   String? workingStyle;
   bool approved = false;
-
-  bool get canApply {
-    bool identity = identityController.text.isNotEmpty;
-    bool name = nameController.text.isNotEmpty;
-    bool surname = surnameController.text.isNotEmpty;
-    bool phone = phoneNumberController.text.isNotEmpty;
-
-    bool result = identity && name && surname && phone && selectedCity != null && selectedFile != null && approved;
-    return result;
-  }
 
   void changeSelectedCity(City? selectedCity) {
     this.selectedCity = selectedCity;
@@ -42,6 +37,11 @@ class JobApplyPageController extends GetxController {
   void pickFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       allowMultiple: false,
+      allowedExtensions: [
+        "pdf",
+        "doc",
+        "docx",
+      ],
     );
 
     if (result != null) {
@@ -52,5 +52,94 @@ class JobApplyPageController extends GetxController {
 
   void updateTextStatus() {
     update();
+  }
+
+  Future<bool> applyNewJob() async {
+    String identity = identityController.text;
+    String name = nameController.text;
+    String surname = surnameController.text;
+    String phone = phoneNumberController.text;
+
+    if (identity.isEmpty) {
+      CustomToast(
+        text: "TCKN bilgisinin doldurulması zorunludur",
+        toastType: CustomToastType.warning,
+      ).showToast();
+      return false;
+    }
+    if (name.isEmpty) {
+      CustomToast(
+        text: "Ad bilgisinin doldurulması zorunludur",
+        toastType: CustomToastType.warning,
+      ).showToast();
+      return false;
+    }
+    if (surname.isEmpty) {
+      CustomToast(
+        text: "Soyad bilgisinin doldurulması zorunludur",
+        toastType: CustomToastType.warning,
+      ).showToast();
+      return false;
+    }
+
+    if (selectedFile?.path == null) {
+      CustomToast(
+        text: "CV bilgisinin doldurulması zorunludur",
+        toastType: CustomToastType.warning,
+      ).showToast();
+      return false;
+    }
+    if (selectedCity == null) {
+      CustomToast(
+        text: "Şehir bilgisinin doldurulması zorunludur",
+        toastType: CustomToastType.warning,
+      ).showToast();
+      return false;
+    }
+    if (phone.isEmpty) {
+      CustomToast(
+        text: "Telefon bilgisinin doldurulması zorunludur",
+        toastType: CustomToastType.warning,
+      ).showToast();
+      return false;
+    }
+    if (!approved) {
+      CustomToast(
+        text: "Aydınlatma Metnini okuyup kabul etmelisiniz",
+        toastType: CustomToastType.warning,
+      ).showToast();
+      return false;
+    }
+
+    var formData = dio.FormData.fromMap(
+      {
+        'tckn': identity,
+        'name': name,
+        'surname': surname,
+        'city': selectedCity!.name,
+        'phoneNumber': phone,
+        'workType': workingStyle,
+        'cv': await dio.MultipartFile.fromFile(
+          selectedFile!.path!,
+          filename: "${name}_$surname.${selectedFile!.name.split(".").last}",
+        ),
+      },
+    );
+
+    var response = await APIConstants.sendPost(
+      APIConstants.getJobApplyUrl,
+      data: formData,
+    );
+
+    log(response.data.toString());
+    bool status = response.statusCode == 200;
+    if (!status) {
+      CustomToast(
+        text: "Sistemsel bir hatadan dolayı başvurunuz alınamadı. Lütfen daha sonra tekrar deneyiniz.",
+        toastType: CustomToastType.error,
+      ).showToast();
+    }
+
+    return status;
   }
 }

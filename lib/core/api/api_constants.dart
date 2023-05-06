@@ -10,6 +10,7 @@ class APIConstants {
   static String get getPasswordResetUrl => "$url/account-service/v1/users/password-reset";
   static String get getJobsUrl => "$url/advertisement-service/v1/advertisements/summary/open";
   static String get getJobDetailUrl => "$url/advertisement-service/v1/advertisements/<id>";
+  static String get getJobApplyUrl => "$url/advertisement-service/v1/advertisements/<id>/apply";
 
   static Future<dio.Response<dynamic>> sendPost(
     String path, {

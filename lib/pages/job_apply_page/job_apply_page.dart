@@ -208,22 +208,20 @@ class _Body extends StatelessWidget {
                       return CustomButton(
                         text: "Başvuruyu Tamamla",
                         onPressed: (startLoading, stopLoading) async {
+                          final controller = Get.find<JobApplyPageController>();
                           startLoading();
-                          await Future.delayed(
-                            const Duration(
-                              seconds: 1,
-                            ),
-                          );
+                          bool status = await controller.applyNewJob();
                           stopLoading();
-                          AtmosferNavigator.push(
-                            "/success",
-                          );
+                          if (status) {
+                            AtmosferNavigator.push(
+                              "/success",
+                            );
+                          }
                         },
                         textStyle: const TextStyle(
                           color: Colors.white,
                         ),
-                        enabled: _.canApply,
-                        backgroundColor: _.canApply ? Colors.black : Colors.grey,
+                        backgroundColor: Colors.black,
                       );
                     },
                   ),
@@ -461,7 +459,7 @@ class _WorkingStyleDropdown extends StatelessWidget {
           children: const [
             Expanded(
               child: Text(
-                "Çalışma Şekli (Zorunlu)",
+                "Çalışma Şekli",
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
