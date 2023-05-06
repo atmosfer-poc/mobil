@@ -92,6 +92,7 @@ class OTPModal extends ModalRoute<String?> {
                       ),
                       Pinput(
                         length: 6,
+                        autofocus: true,
                         defaultPinTheme: PinTheme(
                           width: 56,
                           height: 56,

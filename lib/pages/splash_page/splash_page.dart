@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:atmosfer/core/atmosfer_navigator.dart';
 import 'package:atmosfer/core/core.dart';
-import 'package:atmosfer/core/custom_animations.dart';
 import 'package:atmosfer/models/city.dart';
+import 'package:atmosfer/widgets/loading_widget/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -60,11 +60,10 @@ class _SplashPageState extends State<SplashPage> {
         decoration: const BoxDecoration(
           color: Colors.white,
         ),
-        child: Center(
-          child: SizedBox(
-            height: 150,
-            width: 150,
-            child: CustomAnimations.turkcellLoading,
+        child: const Center(
+          child: LoadingWidget(
+            size: 75,
+            black: true,
           ),
         ),
       ),

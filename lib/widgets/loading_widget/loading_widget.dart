@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 
 class LoadingWidget extends StatelessWidget {
   final double size;
+  final bool black;
   const LoadingWidget({
     Key? key,
     this.size = 20,
+    this.black = false,
   }) : super(key: key);
 
   @override
@@ -13,7 +15,7 @@ class LoadingWidget extends StatelessWidget {
     return SizedBox(
       width: size,
       height: size,
-      child: CustomAnimations.loading,
+      child: black ? CustomAnimations.loadingBlack : CustomAnimations.loading,
     );
   }
 }

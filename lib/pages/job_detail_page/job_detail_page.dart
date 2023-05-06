@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:atmosfer/core/atmosfer_navigator.dart';
 import 'package:atmosfer/pages/job_apply_page/job_apply_page_controller.dart';
 import 'package:atmosfer/pages/job_detail_page/job_detail_page_controller.dart';
 import 'package:atmosfer/widgets/custom_button/custom_button.dart';
 import 'package:atmosfer/widgets/header/header.dart';
+import 'package:atmosfer/widgets/loading_widget/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
@@ -64,23 +67,27 @@ class _Body extends StatelessWidget {
                     Get.back();
                   },
                   child: Row(
-                    children: const [
-                      Icon(
+                    children: [
+                      const Icon(
                         Icons.arrow_back_outlined,
                         color: Colors.black,
                         size: 32,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 8,
                       ),
                       Expanded(
-                        child: Text(
-                          "İş Tanımı",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w800,
-                            fontSize: 24,
-                            color: Colors.black,
-                          ),
+                        child: GetBuilder<JobDetailPageController>(
+                          builder: (_) {
+                            return Text(
+                              _.jobDetailModel?.title ?? "İş Tanımı",
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 24,
+                                color: Colors.black,
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ],
@@ -127,36 +134,58 @@ class _Body extends StatelessWidget {
                         16,
                       ),
                       padding: EdgeInsets.zero,
-                      child: SingleChildScrollView(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 24,
-                          ),
-                          child: Column(
-                            children: [
-                              GetBuilder<JobDetailPageController>(
-                                builder: (_) {
-                                  return Image(
-                                    image: NetworkImage(
-                                      _.jobDetailModel.image,
-                                    ),
-                                  );
-                                },
+                      child: GetBuilder<JobDetailPageController>(
+                        builder: (_) {
+                          if (_.loading) {
+                            return const LoadingWidget(
+                              black: true,
+                              size: 50,
+                            );
+                          }
+
+                          if (_.jobDetailModel == null) {
+                            return const Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 24,
                               ),
-                              const SizedBox(
-                                height: 16,
+                              child: Text(
+                                "Sistem hatası yüzünden detay bilgisi yüklenemedi, lütfen daha sonra tekrar deneyiniz.",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black,
+                                ),
                               ),
-                              GetBuilder<JobDetailPageController>(
-                                builder: (_) {
-                                  return Html(
-                                    data: _.jobDetailModel.content,
-                                  );
-                                },
+                            );
+                          }
+
+                          return SingleChildScrollView(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 24,
                               ),
-                            ],
-                          ),
-                        ),
+                              child: Column(
+                                children: [
+                                  Image(
+                                    image: Image.memory(
+                                      base64Decode(
+                                        _.jobDetailModel!.image,
+                                      ),
+                                    ).image,
+                                  ),
+                                  const SizedBox(
+                                    height: 16,
+                                  ),
+                                  Html(
+                                    data: _.jobDetailModel!.content,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ),

@@ -1,9 +1,9 @@
 import 'package:atmosfer/core/atmosfer_navigator.dart';
-import 'package:atmosfer/models/job_detail_model.dart';
 import 'package:atmosfer/models/job_model.dart';
 import 'package:atmosfer/pages/home_page/home_page_controller.dart';
 import 'package:atmosfer/pages/job_detail_page/job_detail_page_controller.dart';
 import 'package:atmosfer/widgets/header/header.dart';
+import 'package:atmosfer/widgets/loading_widget/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -176,6 +176,12 @@ class _Body extends StatelessWidget {
                   ),
                   child: GetBuilder<HomePageController>(
                     builder: (_) {
+                      if (_.loading) {
+                        return const LoadingWidget(
+                          black: true,
+                          size: 50,
+                        );
+                      }
                       return Column(
                         children: [
                           for (int i = 0; i < _.jobs.length; i++) ...[
@@ -213,11 +219,6 @@ class _Item extends StatelessWidget {
         Get.put(
           JobDetailPageController(
             job: job,
-            jobDetailModel: JobDetailModel(
-              content: "<html><p>test</p></html>",
-              id: job.id,
-              image: "https://picsum.photos/500/500",
-            ),
           ),
         );
         AtmosferNavigator.push(
