@@ -70,25 +70,36 @@ class _Body extends StatelessWidget {
                 const SizedBox(
                   height: 16,
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(
+                Padding(
+                  padding: const EdgeInsets.symmetric(
                     horizontal: 16,
                   ),
-                  child: CustomTextFormField(
-                    label: "Kullanıcı Adı",
-                    required: true,
+                  child: GetBuilder<LoginPageController>(
+                    builder: (_) {
+                      return CustomTextFormField(
+                        label: "Kullanıcı Adı",
+                        required: true,
+                        textEditingController: _.usernameController,
+                      );
+                    },
                   ),
                 ),
                 const SizedBox(
                   height: 16,
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(
+                Padding(
+                  padding: const EdgeInsets.symmetric(
                     horizontal: 16,
                   ),
-                  child: CustomTextFormField(
-                    label: "Şifre",
-                    required: true,
+                  child: GetBuilder<LoginPageController>(
+                    builder: (_) {
+                      return CustomTextFormField(
+                        label: "Şifre",
+                        required: true,
+                        textEditingController: _.passwordController,
+                        password: true,
+                      );
+                    },
                   ),
                 ),
                 const SizedBox(
@@ -131,16 +142,10 @@ class _Body extends StatelessWidget {
                   child: CustomButton(
                     text: "Giriş Yap",
                     onPressed: (startLoading, stopLoading) async {
+                      final controller = Get.find<LoginPageController>();
                       startLoading();
-                      await Future.delayed(
-                        const Duration(
-                          seconds: 1,
-                        ),
-                      );
+                      await controller.login();
                       stopLoading();
-                      AtmosferNavigator.pushAndRemoveUntil(
-                        "/home",
-                      );
                     },
                     textStyle: const TextStyle(
                       color: Colors.white,

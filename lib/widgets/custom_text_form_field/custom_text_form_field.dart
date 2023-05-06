@@ -6,6 +6,7 @@ class CustomTextFormField extends StatefulWidget {
   final bool required;
   final String? hint;
   final Function()? onComplete;
+  final bool password;
   const CustomTextFormField({
     super.key,
     required this.label,
@@ -13,6 +14,7 @@ class CustomTextFormField extends StatefulWidget {
     this.textEditingController,
     this.onComplete,
     this.hint,
+    this.password = false,
   });
 
   @override
@@ -69,6 +71,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
               }
             },
             cursorColor: Colors.black,
+            obscureText: widget.password,
             decoration: InputDecoration(
               floatingLabelBehavior: FloatingLabelBehavior.never,
               isDense: true,
