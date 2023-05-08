@@ -397,7 +397,7 @@ class _CountryDropdown extends StatelessWidget {
                   _.changeSelectedCity(value);
                 },
                 hint: const Text(
-                  "Ülke",
+                  "Şehir",
                   style: TextStyle(
                     fontSize: 12,
                   ),

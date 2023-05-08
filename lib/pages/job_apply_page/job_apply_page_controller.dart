@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:atmosfer/core/api/api_constants.dart';
@@ -141,8 +140,6 @@ class JobApplyPageController extends GetxController {
       data: formData,
     );
 
-    log(response.statusCode.toString());
-    log(response.data.toString());
     bool status = response.statusCode == 200;
     if (!status) {
       CustomToast(
